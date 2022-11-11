@@ -3,7 +3,7 @@
 #include <malloc.h>
 #include "parse.h"
 
-/* original from esp_hid_common.c of ESP-IDF by espressif*/
+/* originally from esp_hid_common.c of ESP-IDF by espressif*/
 typedef struct {
     uint8_t cmd;
     uint8_t len;
@@ -14,7 +14,7 @@ typedef struct {
 } hid_report_cmd_t;
 
 
-/* original from esp_hid_common.c of ESP-IDF by espressif*/
+/* originally from esp_hid_common.c of ESP-IDF by espressif*/
 static int parse_cmd(const uint8_t *data, size_t len, size_t index, hid_report_cmd_t **out)
 {
     if (index == len) {
@@ -61,7 +61,6 @@ static inline int32_t sign_int(uint32_t data, uint8_t origin_size){
         case 4: return data;
         default: return data;
     };
-    
 }
 
 
@@ -176,7 +175,7 @@ static int handle_cmd(hid_report_cmd_t *item,struct parse_context *parse_context
         }else if(item->cmd == HID_ITEM_MAIN_END_COLLECTION){
             free(old_context);
             if(parse_context->collection_depth == 0){
-                printf("error:illegal report map trying to END COLLECTION with no matched COLLECTION");
+                printf("error:illegal report map trying to END COLLECTION with no matched COLLECTION\n");
                 return -1;
             }
             parse_context->collection_depth --;

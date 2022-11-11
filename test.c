@@ -33,6 +33,15 @@ void main(){
     parse_result_t *result = parse_report_map(report_map, sizeof(report_map));
     mouse_translate_t translate;
     make_mouse_translate(result, &translate);
-
-    printf("%d", translate.wheel.bit_count);
+    free_parse_result(result);
+    uint8_t report_in[] = {0x05, 0x40, 0xE2, 0x81};    // x=64, y=-30, z=-127
+    standard_mouse_report_t report_out;
+    translate_mouse_report(&translate, report_in, sizeof(report_in), &report_out);
+    printf("out: [");
+    for(int i=0;i<7;i++){
+        printf("%02x ", ((uint8_t *)&report_out)[i]);
+    }
+    printf("]");
+    
+    
 }

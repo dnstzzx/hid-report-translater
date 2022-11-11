@@ -52,4 +52,4 @@ typedef struct{
 }parse_result_t;
 
 parse_result_t *parse_report_map(uint8_t *HID_ITEM_GLOBAL, size_t HID_ITEM_GLOBAL_len);
-
+void free_parse_result(parse_result_t *rst);
