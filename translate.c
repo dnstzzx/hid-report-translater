@@ -131,6 +131,10 @@ static enum translate_item_result translate_u32_item(translate_item_t *item, uin
 
 uint8_t translate_mouse_report(mouse_translate_t *translate, uint8_t *report_in, uint8_t report_in_length, standard_mouse_report_t *report_out){
     memset(report_out, 0, sizeof(standard_mouse_report_t));
+    if(translate->report_id){
+        report_in ++;
+        report_in_length --;
+    }
     struct translate_step{
         translate_item_t *item;
         const char *item_name;
