@@ -5,7 +5,7 @@
 translate_model_t detect_translate_model(uint8_t *raw_report_map, size_t length){
     if(length < 4)  return NONE;
     if(raw_report_map[0] != 0x05 || raw_report_map[1] != 0x01)  return NONE;    // Usage Page (Generic Desktop Ctrls)
-    if(raw_report_map[1] == 0x09 && raw_report_map[2] == 0x02)  return MOUSE;   // Usage (Mouse)
+    if(raw_report_map[2] == 0x09 && raw_report_map[3] == 0x02)  return MOUSE;   // Usage (Mouse)
     return NONE;
 }
 
@@ -52,7 +52,7 @@ static inline void mouse_translate_usage_handler(struct main_item_context *main_
                 translate_item->pre_scale_bias = -1 * main_item->global.logical_minimum;
                 translate_item->post_scale_bias = -32767;
             }
-            translate_item->scale_factor = (32767 - (-32767))/ (logical_maximum - logical_minimum);
+            translate_item->scale_factor = 1;//(32767 - (-32767))/ (logical_maximum - logical_minimum);
         }
     }
 }
