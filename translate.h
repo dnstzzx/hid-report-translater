@@ -5,6 +5,7 @@ typedef enum translate_model{NONE, MOUSE, KEYBOARD} translate_model_t;
 
 #pragma pack(1)
 typedef struct {
+    uint8_t report_id;
     uint8_t buttons;    // 8 buttons available
     int16_t x;  // -32767 to 32767
     int16_t y;  // -32767 to 32767

@@ -138,17 +138,18 @@ uint8_t translate_mouse_report(mouse_translate_t *translate, uint8_t *report_in,
     struct translate_step{
         translate_item_t *item;
         const char *item_name;
-        int8_t out_offset;
-        int8_t out_length;
+        uint8_t *out_addr;
+        uint8_t out_length;
     }steps[] = {
-        {.item=&translate->buttons, .item_name="btns", .out_offset=0, .out_length=1},
-        {.item=&translate->x, .item_name="x", .out_offset=1, .out_length=2},
-        {.item=&translate->y, .item_name="y", .out_offset=3, .out_length=2},
-        {.item=&translate->wheel, .item_name="wheel", .out_offset=5, .out_length=2}
+        {.item=&translate->buttons, .item_name="btns", .out_addr=&report_out->buttons, .out_length=1},
+        {.item=&translate->x, .item_name="x", .out_addr=&report_out->x, .out_length=2},
+        {.item=&translate->y, .item_name="y", .out_addr=&report_out->y, .out_length=2},
+        {.item=&translate->wheel, .item_name="wheel", .out_addr=&report_out->wheel, .out_length=2}
     };
 
     enum translate_item_result (*item_translate_funcs [2])(translate_item_t *, uint8_t *, uint8_t, uint32_t *) = {translate_u32_item, translate_i32_item};
     
+    report_out->report_id = 1;
     for(int i=0; i<4; i++){
         struct translate_step *step = &steps[i];
         translate_item_t *item = step->item;
@@ -158,7 +159,7 @@ uint8_t translate_mouse_report(mouse_translate_t *translate, uint8_t *report_in,
 #if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
             item_out = ((item_out&0x000000ff) << 24 | (item_out&0x0000ff00) << 8 | (item_out&0x00ff0000) >> 8 | (item_out&0xff000000) >> 24);
 #endif
-            memcpy((uint8_t *)report_out + step->out_offset, &item_out, step->out_length);
+            memcpy(step->out_addr, &item_out, step->out_length);
         }else{
             switch(result){
                 case NOT_DEFINED:   printf("warning: field %s not defined in translation, ignoring\n", step->item_name); break;
@@ -176,6 +177,7 @@ const uint8_t standard_mouse_report_desc[] = {
     0x05, 0x01,        // Usage Page (Generic Desktop Ctrls)
     0x09, 0x02,        // Usage (Mouse)
     0xA1, 0x01,        // Collection (Application)
+    0x85, 0x01,        //   Report ID (66)
     0x09, 0x01,        //   Usage (Pointer)
     0xA1, 0x00,        //   Collection (Physical)
     0x05, 0x09,        //     Usage Page (Button)
